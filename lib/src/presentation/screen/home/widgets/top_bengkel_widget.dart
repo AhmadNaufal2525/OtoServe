@@ -42,18 +42,7 @@ class TopBengkelWidget extends StatelessWidget {
                   ),
                 ),
                 SizedBox(
-                  height: 1.h,
-                ),
-                Text(
-                  '1,5 km',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w500,
-                    fontSize: 16.sp,
-                  ),
-                ),
-                SizedBox(
-                  height: 3.h,
+                  height: 4.h,
                 ),
                 Row(
                   children: [
@@ -69,14 +58,33 @@ class TopBengkelWidget extends StatelessWidget {
                       '4.9',
                       style: TextStyle(
                         color: Colors.white,
-                        fontWeight: FontWeight.w600,
+                        fontWeight: FontWeight.w500,
+                        fontSize: 16.sp,
+                      ),
+                    ),
+                    SizedBox(
+                      width: 10.w,
+                    ),
+                    const Icon(
+                      Icons.location_on,
+                      color: Colors.white,
+                      size: 20,
+                    ),
+                    SizedBox(
+                      width: 6.w,
+                    ),
+                    Text(
+                      '1,5 km',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.w500,
                         fontSize: 16.sp,
                       ),
                     ),
                   ],
                 ),
                 SizedBox(
-                  height: 10.h,
+                  height: 4.h,
                 ),
                 Text(
                   'Open',
