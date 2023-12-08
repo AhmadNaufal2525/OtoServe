@@ -13,58 +13,6 @@ class FindBengkelScreen extends StatefulWidget {
 }
 
 class _FindBengkelScreenState extends State<FindBengkelScreen> {
-  List<Map<String, dynamic>> bengkelData = [
-    {
-      'image': 'assets/images/bengkel.png',
-      'text': 'Bengkel Tesla',
-      'rate': '4.9',
-      'jarak': '1.5 km',
-      'status': 'Open',
-    },
-    {
-      'image': 'assets/images/bengkel.png',
-      'text': 'Bengkel Fusion',
-      'rate': '4.7',
-      'jarak': '2.2 km',
-      'status': 'Closed',
-    },
-    {
-      'image': 'assets/images/bengkel.png',
-      'text': 'Bengkel Fusion',
-      'rate': '4.7',
-      'jarak': '2.2 km',
-      'status': 'Closed',
-    },
-    {
-      'image': 'assets/images/bengkel.png',
-      'text': 'Bengkel Fusion',
-      'rate': '4.7',
-      'jarak': '2.2 km',
-      'status': 'Closed',
-    },
-    {
-      'image': 'assets/images/bengkel.png',
-      'text': 'Bengkel Fusion',
-      'rate': '4.7',
-      'jarak': '2.2 km',
-      'status': 'Closed',
-    },
-    {
-      'image': 'assets/images/bengkel.png',
-      'text': 'Bengkel Fusion',
-      'rate': '4.7',
-      'jarak': '2.2 km',
-      'status': 'Closed',
-    },
-    {
-      'image': 'assets/images/bengkel.png',
-      'text': 'Bengkel Fusion',
-      'rate': '4.7',
-      'jarak': '2.2 km',
-      'status': 'Closed',
-    },
-  ];
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -75,7 +23,7 @@ class _FindBengkelScreenState extends State<FindBengkelScreen> {
             bottomRight: Radius.circular(10),
           ),
         ),
-        automaticallyImplyLeading: false,
+        automaticallyImplyLeading: true,
         centerTitle: false,
         toolbarHeight: 100.h,
         title: Column(
@@ -114,7 +62,7 @@ class _FindBengkelScreenState extends State<FindBengkelScreen> {
                 style: TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.w600,
-                  fontSize: 24.sp,
+                  fontSize: 20.sp,
                 ),
               ),
             ),

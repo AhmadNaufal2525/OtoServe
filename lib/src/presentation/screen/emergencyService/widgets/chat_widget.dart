@@ -23,7 +23,7 @@ class _ChatWidgetState extends State<ChatWidget> {
             bottomRight: Radius.circular(10),
           ),
         ),
-        automaticallyImplyLeading: false,
+        automaticallyImplyLeading: true,
         centerTitle: false,
         toolbarHeight: 100.h,
         title: Column(
