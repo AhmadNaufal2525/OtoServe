@@ -1,8 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:otoserve/src/presentation/screen/findBengkel/widgets/detail_bengkel_widget.dart';
 import 'package:otoserve/src/presentation/screen/home/widgets/promo_widget.dart';
 import 'package:otoserve/src/presentation/screen/home/widgets/service_widget.dart';
-import 'package:otoserve/src/presentation/screen/home/widgets/top_bengkel_widget.dart';
+import 'package:otoserve/src/presentation/screen/home/widgets/card_bengkel_widget.dart';
 import 'package:otoserve/src/presentation/screen/home/widgets/wallet_widget.dart';
 import 'package:otoserve/src/utils/colors.dart';
 
@@ -71,9 +73,80 @@ class _HomeScreenState extends State<HomeScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       PromoWidget(),
-                      const TopBengkelWidget(),
-                      SizedBox(height: 18.h,),
-                      Divider(thickness: 1, color: AppColor.dividerColor,)
+                      Text(
+                        'Top Bengkel',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w600,
+                          fontSize: 18.sp,
+                        ),
+                      ),
+                      SizedBox(
+                        height: 120,
+                        child: StreamBuilder<QuerySnapshot>(
+                          stream: FirebaseFirestore.instance
+                              .collection('bengkel')
+                              .orderBy('rate', descending: true)
+                              .snapshots(),
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return const Center(
+                                child: CircularProgressIndicator(),
+                              );
+                            }
+                            if (snapshot.hasError) {
+                              return Center(
+                                child: Text('Error: ${snapshot.error}'),
+                              );
+                            }
+                            final docs = snapshot.data!.docs;
+                            if (docs.isEmpty) {
+                              return const Center(
+                                child: Text('Bengkel tidak ditemuka'),
+                              );
+                            }
+                            return ListView.builder(
+                              padding: const EdgeInsets.symmetric(vertical: 10),
+                              itemCount: 1,
+                              itemBuilder: (context, index) {
+                                final bengkel = docs[index];
+                                return CardBengkelWidget(
+                                  image: bengkel['image_url'],
+                                  text: bengkel['nama'],
+                                  rate: bengkel['rate'],
+                                  jarak: bengkel['jarak'],
+                                  status: bengkel['status'],
+                                  onTap: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) =>
+                                            DetailBengkelWidget(
+                                          imageUrl: bengkel['image_url'],
+                                          nama: bengkel['nama'],
+                                          rate: bengkel['rate'],
+                                          layanan: bengkel['services'],
+                                          alamat: bengkel['alamat'],
+                                          jamBuka: bengkel['jam'],
+                                          status: bengkel['status'],
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                );
+                              },
+                            );
+                          },
+                        ),
+                      ),
+                      SizedBox(
+                        height: 18.h,
+                      ),
+                      Divider(
+                        thickness: 1,
+                        color: AppColor.dividerColor,
+                      )
                     ],
                   ),
                 ),

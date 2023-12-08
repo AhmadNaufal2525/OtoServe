@@ -14,7 +14,6 @@ class _RiwayatScreenState extends State<RiwayatScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: AppColor.primaryColor,
         centerTitle: true,
         title: Text(
           'Riwayat Transaksi',
@@ -24,7 +23,6 @@ class _RiwayatScreenState extends State<RiwayatScreen> {
             fontSize: 16.sp,
           ),
         ),
-        elevation: 0,
       ),
       backgroundColor: AppColor.backgroundColor,
     );

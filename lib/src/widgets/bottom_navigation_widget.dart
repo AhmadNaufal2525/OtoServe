@@ -8,7 +8,8 @@ class BottomNavigationWidget extends StatefulWidget {
   const BottomNavigationWidget({super.key});
 
   @override
-  State<BottomNavigationWidget> createState() => _BottomNavigationWidgetNavState();
+  State<BottomNavigationWidget> createState() =>
+      _BottomNavigationWidgetNavState();
 }
 
 class _BottomNavigationWidgetNavState extends State<BottomNavigationWidget> {
@@ -27,7 +28,8 @@ class _BottomNavigationWidgetNavState extends State<BottomNavigationWidget> {
     setState(() {
       selectedIndex = index;
       pageController.animateToPage(index,
-          duration: const Duration(milliseconds: 300), curve: Curves.fastEaseInToSlowEaseOut);
+          duration: const Duration(milliseconds: 300),
+          curve: Curves.fastEaseInToSlowEaseOut);
     });
   }
 
@@ -37,9 +39,14 @@ class _BottomNavigationWidgetNavState extends State<BottomNavigationWidget> {
         icon: Icon(Icons.home_filled),
         label: 'Beranda',
       ),
-      const BottomNavigationBarItem(icon: Icon(Icons.history), label: 'Riwayat'),
       const BottomNavigationBarItem(
-          icon: Icon(Icons.person_2_rounded), label: 'Profil'),
+        icon: Icon(Icons.history),
+        label: 'Riwayat',
+      ),
+      const BottomNavigationBarItem(
+        icon: Icon(Icons.person_2_rounded),
+        label: 'Profil',
+      ),
     ];
   }
 

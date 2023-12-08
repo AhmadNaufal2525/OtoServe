@@ -14,8 +14,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: AppColor.primaryColor,
-        centerTitle: true,
         title: Text(
           'My Account',
           style: TextStyle(
@@ -24,7 +22,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
             fontSize: 16.sp,
           ),
         ),
-        elevation: 0,
       ),
       backgroundColor: AppColor.backgroundColor,
     );

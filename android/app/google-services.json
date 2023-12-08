@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "931096297493",
+    "project_id": "otoserve-49e20",
+    "storage_bucket": "otoserve-49e20.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:931096297493:android:7dbe01554bebaf1dab0e1c",
+        "android_client_info": {
+          "package_name": "com.example.otoserve"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDlVZD0kcr5Jl51W78_2SyqdLOX2vuMWDM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
