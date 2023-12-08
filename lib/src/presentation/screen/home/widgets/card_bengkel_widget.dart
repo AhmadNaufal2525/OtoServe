@@ -31,6 +31,13 @@ class CardBengkelWidget extends StatelessWidget {
                 image,
                 width: 128.w,
                 height: 102.h,
+                errorBuilder: (context, error, stackTrace) {
+                  return Image.asset(
+                    'assets/images/bengkel.png',
+                    width: 128.w,
+                    height: 102.h,
+                  );
+                },
               ),
               SizedBox(
                 width: 28.w,

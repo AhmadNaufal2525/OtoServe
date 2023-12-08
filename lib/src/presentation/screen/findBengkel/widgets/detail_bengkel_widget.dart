@@ -62,6 +62,10 @@ class _DetailBengkelWidgetState extends State<DetailBengkelWidget> {
                       child: Image.network(
                         widget.imageUrl,
                         fit: BoxFit.fill,
+                        errorBuilder: (context, error, stackTrace) {
+                          return Image.asset('assets/images/bengkel.png',
+                              fit: BoxFit.fill);
+                        },
                       ),
                     ),
                   ],
