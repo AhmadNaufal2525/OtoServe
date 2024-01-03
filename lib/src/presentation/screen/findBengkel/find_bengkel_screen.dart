@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:otoserve/src/presentation/screen/findBengkel/widgets/detail_bengkel_widget.dart';
 import 'package:otoserve/src/presentation/screen/home/widgets/card_bengkel_widget.dart';
 import 'package:otoserve/src/utils/colors.dart';
+import 'package:otoserve/src/widgets/bottom_navigation_widget.dart';
 
 class FindBengkelScreen extends StatefulWidget {
   const FindBengkelScreen({super.key});
@@ -24,52 +25,29 @@ class _FindBengkelScreenState extends State<FindBengkelScreen> {
           ),
         ),
         automaticallyImplyLeading: true,
-        centerTitle: false,
-        toolbarHeight: 100.h,
-        title: Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Align(
-                  alignment: Alignment.topLeft,
-                  child: Text(
-                    'Hello Helga',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w600,
-                      fontSize: 16.sp,
-                    ),
-                  ),
-                ),
-                IconButton(
-                  onPressed: () {},
-                  icon: Icon(
-                    Icons.notifications_none_rounded,
-                    color: Colors.white,
-                    size: 22.sp,
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(
-              height: 10.h,
-            ),
-            Align(
-              alignment: Alignment.topLeft,
-              child: Text(
-                'Find your nearest workshop',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w600,
-                  fontSize: 20.sp,
-                ),
+        leading: IconButton(
+          onPressed: () {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const BottomNavigationWidget(),
               ),
-            ),
-            SizedBox(
-              height: 10.h,
-            ),
-          ],
+            );
+          },
+          icon: const Icon(
+            Icons.arrow_back,
+            color: Colors.white,
+          ),
+        ),
+        centerTitle: false,
+        toolbarHeight: 80.h,
+        title: Text(
+          'Pilih bengkel terdekat',
+          style: TextStyle(
+            color: Colors.white,
+            fontWeight: FontWeight.w600,
+            fontSize: 16.sp,
+          ),
         ),
       ),
       backgroundColor: AppColor.backgroundColor,
@@ -93,7 +71,7 @@ class _FindBengkelScreenState extends State<FindBengkelScreen> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Current Location',
+                        'Lokasi Anda',
                         style: TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.w800,
@@ -116,7 +94,7 @@ class _FindBengkelScreenState extends State<FindBengkelScreen> {
                 height: 20.h,
               ),
               Text(
-                'Nearest Workshop',
+                'Bengkel Terdekat',
                 style: TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.w500,
@@ -147,13 +125,13 @@ class _FindBengkelScreenState extends State<FindBengkelScreen> {
                     final docs = snapshot.data!.docs;
                     if (docs.isEmpty) {
                       return const Center(
-                        child: Text('Bengkel tidak ditemuka'),
+                        child: Text('Bengkel tidak ditemukan'),
                       );
                     }
                     return ListView.separated(
                       physics: const BouncingScrollPhysics(),
                       separatorBuilder: (context, index) =>
-                          SizedBox(height: 10.h),
+                          SizedBox(height: 30.h),
                       itemCount: docs.length,
                       itemBuilder: (context, index) {
                         final bengkel = docs[index];
@@ -173,6 +151,7 @@ class _FindBengkelScreenState extends State<FindBengkelScreen> {
                                   imageUrl: bengkel['image_url'],
                                   nama: bengkel['nama'],
                                   rate: bengkel['rate'],
+                                  jarak: bengkel['jarak'],
                                   layanan: services,
                                   alamat: bengkel['alamat'],
                                   jamBuka: bengkel['jam'],

@@ -9,7 +9,7 @@ class WalletWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: 344.w,
-      height: 90.h,
+      height: 100.h,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.all(
           Radius.circular(10.r),

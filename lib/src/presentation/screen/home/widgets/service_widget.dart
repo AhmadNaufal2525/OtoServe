@@ -26,6 +26,7 @@ class _ServiceWidgetState extends State<ServiceWidget> {
           image: 'assets/icons/service.png',
           text: 'Home\nService',
           onTap: () {
+            Navigator.pushNamed(context, Routes.homeServiceScreen);
           },
         ),
         ServicesTypeWidget(

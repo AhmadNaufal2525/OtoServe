@@ -21,7 +21,7 @@ class PromoWidget extends StatelessWidget {
               style: TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.w600,
-                fontSize: 18.sp,
+                fontSize: 16.sp,
               ),
             ),
             Text(
@@ -35,6 +35,9 @@ class PromoWidget extends StatelessWidget {
           ],
         ),
         SizedBox(
+          height: 14.h,
+        ),
+        SizedBox(
           height: 140.h,
           child: ListView.builder(
             physics: const BouncingScrollPhysics(),
@@ -43,8 +46,8 @@ class PromoWidget extends StatelessWidget {
             itemBuilder: (contex, index) {
               final promo = promoList[index];
               return Container(
-                width: 248,
-                margin: const EdgeInsets.only(right: 8.0).w,
+                width: 250,
+                margin: const EdgeInsets.only(right: 16.0).r,
                 child: Row(
                   children: [
                     Image.asset(promo, width: 248.w),

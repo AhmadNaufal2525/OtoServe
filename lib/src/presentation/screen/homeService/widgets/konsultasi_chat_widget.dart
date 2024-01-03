@@ -2,18 +2,26 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:otoserve/src/presentation/screen/emergencyService/widgets/card_chat.dart';
 import 'package:otoserve/src/presentation/screen/emergencyService/widgets/user_chat_widget.dart';
+import 'package:otoserve/src/presentation/screen/homeService/home_service_list.dart';
 import 'package:otoserve/src/utils/colors.dart';
 
-class ChatWidget extends StatefulWidget {
-  final String imageUrl;
+class KonsultasiChatWidget extends StatefulWidget {
   final String name;
-  const ChatWidget({super.key, required this.imageUrl, required this.name});
+  final String imageUrl;
+  final bool? konfirm;
+  final String? rate;
+  const KonsultasiChatWidget(
+      {super.key,
+      required this.name,
+      required this.imageUrl,
+      this.konfirm,
+      this.rate});
 
   @override
-  State<ChatWidget> createState() => _ChatWidgetState();
+  State<KonsultasiChatWidget> createState() => _ChatWidgetState();
 }
 
-class _ChatWidgetState extends State<ChatWidget> {
+class _ChatWidgetState extends State<KonsultasiChatWidget> {
   @override
   Widget build(BuildContext context) {
     final mediaQueryData = MediaQuery.of(context);
@@ -25,16 +33,7 @@ class _ChatWidgetState extends State<ChatWidget> {
             bottomRight: Radius.circular(10),
           ),
         ),
-        automaticallyImplyLeading: true,
-         leading: IconButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          icon: const Icon(
-            Icons.arrow_back,
-            color: Colors.white,
-          ),
-        ),
+        automaticallyImplyLeading: false,
         centerTitle: false,
         toolbarHeight: 100.h,
         title: Row(
@@ -43,6 +42,13 @@ class _ChatWidgetState extends State<ChatWidget> {
               radius: 20.r,
               backgroundColor: AppColor.dividerColor,
               backgroundImage: NetworkImage(widget.imageUrl),
+              onBackgroundImageError: (exception, stackTrace) {
+                Icon(
+                  Icons.person_2_rounded,
+                  size: 20.sp,
+                  color: Colors.white,
+                );
+              },
             ),
             SizedBox(
               width: 10.w,
@@ -57,6 +63,28 @@ class _ChatWidgetState extends State<ChatWidget> {
             ),
           ],
         ),
+        actions: widget.konfirm == true
+            ? null // If konfirm is true, don't show any action buttons
+            : [
+                TextButton(
+                  onPressed: () {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => HomeServiceList(
+                          nama: widget.name,
+                          imageUrl: widget.imageUrl,
+                          rate: widget.rate!
+                        ),
+                      ),
+                    );
+                  },
+                  child: const Text(
+                    'Selesai',
+                    style: TextStyle(color: Colors.blue),
+                  ),
+                ),
+              ],
         elevation: 0,
       ),
       backgroundColor: AppColor.backgroundColor,
@@ -65,27 +93,36 @@ class _ChatWidgetState extends State<ChatWidget> {
           children: [
             CardChat(
               name: widget.name,
-              text: 'Halo, posisi sudah sesuai kan pak?',
-              time: '29m',
+              text: 'Halo, Apa yang ini anda diskusikan?',
+              time: '2m',
               colorName: const Color(0xff00C4FF),
               colorContainer: const Color(0xffE0F8FF),
             ),
             const UserChatWidget(
               name: 'Saya',
-              text: 'Sudah pak, sudah sesuai lokasi',
-              time: '29m',
+              text:
+                  'Mesin mobil saya berbunyi dengan keras,\napa yang harus di service?',
+              time: '1m',
             ),
             CardChat(
               name: widget.name,
-              text: 'Baik pak, mohon ditunggu kami\nsegera menuju lokasi',
-              time: '30m',
+              text:
+                  'Silahkan anda memilih service\nmesin untuk memperbaiki mesin mobil anda',
+              time: '1m',
               colorName: const Color(0xff00C4FF),
               colorContainer: const Color(0xffE0F8FF),
             ),
             const UserChatWidget(
               name: 'Saya',
-              text: 'Oke pak ditunggu ya pak',
-              time: '29m',
+              text: 'Oke saya akan memesan service mesin',
+              time: '1m',
+            ),
+            CardChat(
+              name: widget.name,
+              text: 'Baik, silahkan lakukan pemesanan home service',
+              time: '5s',
+              colorName: const Color(0xff00C4FF),
+              colorContainer: const Color(0xffE0F8FF),
             ),
           ],
         ),
@@ -122,7 +159,7 @@ class _ChatWidgetState extends State<ChatWidget> {
                   width: 8,
                 ),
                 SizedBox(
-                  width: 240,
+                  width: 240.w,
                   child: TextFormField(
                     decoration: InputDecoration(
                       floatingLabelBehavior: FloatingLabelBehavior.never,

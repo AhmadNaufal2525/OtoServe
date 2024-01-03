@@ -1,123 +1,156 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:otoserve/src/presentation/screen/emergencyService/widgets/current_user_location_widget.dart';
+
 import 'package:otoserve/src/utils/colors.dart';
 
 class NavigasiBengkelWidget extends StatelessWidget {
-  const NavigasiBengkelWidget({super.key});
+  final String nama;
+  final String imageUrl;
+  final String jarak;
+  final String rating;
+  final String status;
+  const NavigasiBengkelWidget(
+      {super.key,
+      required this.nama,
+      required this.imageUrl,
+      required this.jarak,
+      required this.rating,
+      required this.status});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        shape: const RoundedRectangleBorder(
-          borderRadius: BorderRadius.only(
-            bottomLeft: Radius.circular(10),
-            bottomRight: Radius.circular(10),
-          ),
-        ),
-        automaticallyImplyLeading: false,
-        centerTitle: false,
-        toolbarHeight: 100.h,
-        title: Column(
+      body: SingleChildScrollView(
+        child: Stack(
           children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Align(
-                  alignment: Alignment.topLeft,
-                  child: Text(
-                    'Hello Helga',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w600,
-                      fontSize: 16.sp,
+            Image.asset(
+              'assets/images/maps_1.png',
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 42, horizontal: 10),
+              child: Align(
+                alignment: Alignment.topLeft,
+                child: CircleAvatar(
+                  backgroundColor: AppColor.dividerColor,
+                  child: IconButton(
+                    color: Colors.white,
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    icon: const Icon(
+                      Icons.arrow_back,
                     ),
                   ),
                 ),
-                IconButton(
-                  onPressed: () {},
-                  icon: Icon(
-                    Icons.notifications_none_rounded,
-                    color: Colors.white,
-                    size: 22.sp,
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(
-              height: 10.h,
-            ),
-            Align(
-              alignment: Alignment.topLeft,
-              child: Text(
-                'Navigasi menuju Bengkel',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w600,
-                  fontSize: 22.sp,
-                ),
               ),
             ),
-            SizedBox(
-              height: 10.h,
+            Padding(
+              padding: const EdgeInsets.only(top: 700.0),
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  children: [
+                    Container(
+                      width: 380.w,
+                      height: 130.h,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(20.0.r)),
+                        color: AppColor.containerColor,
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(18.0).w,
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(10.0).r,
+                              child: Image.network(
+                                imageUrl,
+                                fit: BoxFit.cover,
+                                width: 100,
+                                height: 70,
+                                errorBuilder: (context, error, stackTrace) {
+                                  return Image.asset(
+                                    'assets/images/bengkel.png',
+                                    width: 128.w,
+                                    height: 102.h,
+                                  );
+                                },
+                              ),
+                            ),
+                            SizedBox(width: 12.w),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Text(
+                                        nama,
+                                        style: TextStyle(
+                                          fontSize: 12.sp,
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      Row(
+                                        children: [
+                                          const Icon(
+                                            Icons.star,
+                                            color: Colors.yellow,
+                                            size: 20,
+                                          ),
+                                          const SizedBox(width: 4),
+                                          Text(
+                                            rating,
+                                            style: const TextStyle(
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                        ],
+                                      )
+                                    ],
+                                  ),
+                                  SizedBox(height: 6.h),
+                                  Text(
+                                    status,
+                                    style: TextStyle(
+                                      fontSize: 12.sp,
+                                      color: Colors.green,
+                                    ),
+                                  ),
+                                  SizedBox(height: 6.h),
+                                  Text(
+                                    '$jarak dari lokasimu',
+                                    style: TextStyle(
+                                      fontSize: 12.sp,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                  SizedBox(height: 6.h),
+                                  Text(
+                                    'Estimasi tiba: 50 Menit',
+                                    style: TextStyle(
+                                      fontSize: 12.sp,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ),
           ],
         ),
-      ),
-      backgroundColor: AppColor.backgroundColor,
-      body: Column(
-        children: [
-          SizedBox(
-            height: 16.h,
-          ),
-          Image.asset(
-            'assets/images/maps.jpeg',
-            width: double.infinity,
-            height: 220.h,
-            fit: BoxFit.fill,
-          ),
-          SizedBox(
-            height: 30.h,
-          ),
-          Center(
-            child: Text(
-              'LOKASI BENGKEL',
-              style: TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.w600,
-                fontSize: 14.sp,
-              ),
-              textAlign: TextAlign.center,
-            ),
-          ),
-          SizedBox(
-            height: 10.h,
-          ),
-          Text(
-            'Kami akan segera melakukan navigasi ke bengkel yang dituju',
-            style: TextStyle(
-              color: Colors.grey[400],
-              fontWeight: FontWeight.w700,
-              fontSize: 14.sp,
-            ),
-            textAlign: TextAlign.center,
-          ),
-          SizedBox(
-            height: 30.h,
-          ),
-          const CurrentUserLocationWidget(type: 'Lokasi Anda', alamat: 'Jl. Sambas no. 127 blok 87, Central Jakarta ', phone: '082123567789',),
-          SizedBox(
-            height: 30.h,
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20).w,
-            child: Divider(
-              thickness: 1,
-              color: AppColor.dividerColor,
-            ),
-          )
-        ],
       ),
     );
   }

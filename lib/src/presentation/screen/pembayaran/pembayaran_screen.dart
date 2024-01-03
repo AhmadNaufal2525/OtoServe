@@ -1,142 +1,330 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:lottie/lottie.dart';
 import 'package:otoserve/src/presentation/screen/emergencyService/widgets/bengkel_emergency_widget.dart';
-import 'package:otoserve/src/presentation/screen/home/home_screen.dart';
+import 'package:otoserve/src/presentation/screen/pembayaran/widgets/dashed_divider.dart';
+import 'package:otoserve/src/presentation/screen/pembayaran/widgets/sucessfull_payment.dart';
 import 'package:otoserve/src/utils/colors.dart';
+import 'dart:math';
 
 class PembayaranScreen extends StatefulWidget {
-  const PembayaranScreen({Key? key}) : super(key: key);
+  final String namaLayanan;
+  final String harga;
+  const PembayaranScreen(
+      {Key? key, required this.namaLayanan, required this.harga})
+      : super(key: key);
 
   @override
   State<PembayaranScreen> createState() => _PembayaranScreenState();
 }
 
 class _PembayaranScreenState extends State<PembayaranScreen> {
-  String selectedPaymentMethod = 'Credit Card';
-  String totalPayment = '1.000.000';
 
-  List<String> services = [
-    'Towing',
-    'Ganti Suku Cadang',
-    'Tune Up Mesin',
-  ];
+  Future<void> addPaymentToFirestore() async {
+  CollectionReference payments = FirebaseFirestore.instance.collection('payment');
+  User? user = FirebaseAuth.instance.currentUser;
+  String senderName = 'Unknown';
+
+  if (user != null) {
+    DocumentSnapshot<Map<String, dynamic>> userData = await FirebaseFirestore.instance
+        .collection('User')
+        .doc(user.uid)
+        .get();
+
+    String? username = userData.data()?['username'];
+    if (username != null && username.isNotEmpty) {
+      senderName = username;
+    }
+  }
+
+  await payments.add({
+    'orderId': generateOrderId(),
+    'paymentTime': getCurrentTime(),
+    'paymentMethod': 'Bank Transfer',
+    'service': widget.namaLayanan, 
+    'senderName': senderName,
+    'amount': widget.harga,
+    'adminFee': 'Rp 1.000',
+    'paymentStatus': 'Success',
+    'serviceType': 'Emergency Service',
+  });
+}
+  String getCurrentTime() {
+    DateTime now = DateTime.now();
+    String formattedTime =
+        '${now.day}-${now.month}-${now.year}, ${now.hour}:${now.minute}:${now.second}';
+    return formattedTime;
+  }
+
+  String generateOrderId() {
+    const characters = '0123456789abcdefghijklmnopqrstuvwxyz';
+    const length = 12;
+    final random = Random();
+    String orderId = '';
+    for (int i = 0; i < length; i++) {
+      orderId += characters[random.nextInt(characters.length)];
+    }
+    return orderId;
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColor.backgroundColor,
       appBar: AppBar(
-        title: const Text('Payment'),
+        title: const Text(
+          'Pembayaran',
+          style: TextStyle(color: Colors.white),
+        ),
         leading: IconButton(
           onPressed: () {
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(
-                builder: (context) => const BengkelEmergencyWidget(),
+                builder: (context) => BengkelEmergencyWidget(
+                  namaLayanan: widget.namaLayanan,
+                  harga: widget.harga,
+                ),
               ),
             );
           },
           icon: const Icon(
             Icons.arrow_back,
+            color: Colors.white,
           ),
         ),
       ),
       body: Padding(
         padding: const EdgeInsets.all(20.0).w,
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Center(
-              child: LottieBuilder.network(
-                'https://lottie.host/a5bde4eb-8188-4c19-ba36-74935a6e6e71/62WzDqBwX6.json',
-                width: 280.w,
-                height: 280.h,
-              ),
-            ),
-            const Text(
-              'Pilih Metode Pembayaran:',
+            Text(
+              'Detail\nPembayaran',
               style: TextStyle(
-                fontSize: 18.0,
                 color: Colors.white,
-                fontWeight: FontWeight.bold,
+                fontSize: 20.sp,
               ),
+              textAlign: TextAlign.center,
             ),
-            const SizedBox(height: 10.0),
-            DropdownButton<String>(
-              value: selectedPaymentMethod,
-              onChanged: (String? newValue) {
-                setState(() {
-                  selectedPaymentMethod = newValue!;
-                });
-              },
-              dropdownColor: Colors.black,
-              items: <String>['Credit Card', 'PayPal', 'Bank Transfer', 'Cash']
-                  .map<DropdownMenuItem<String>>((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(
-                    value,
-                    style: const TextStyle(color: Colors.white),
-                  ),
-                );
-              }).toList(),
+            SizedBox(
+              height: 32.h,
             ),
-            const SizedBox(height: 20.0),
-            const Text(
-              'Service:',
-              style: TextStyle(
-                fontSize: 18.0,
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
+            Container(
+              width: 345.w,
+              height: 330.h,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(16.r),
+                color: AppColor.dividerColor,
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(12.0).w,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
+                          'Order Id',
+                          style: TextStyle(color: Colors.white54),
+                        ),
+                        Text(
+                          generateOrderId(),
+                          style: const TextStyle(color: Colors.white),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 10.h,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
+                          'Payment Time',
+                          style: TextStyle(color: Colors.white54),
+                        ),
+                        Text(
+                          getCurrentTime(),
+                          style: const TextStyle(color: Colors.white),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 10.h,
+                    ),
+                    const Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'Payment Method',
+                          style: TextStyle(color: Colors.white54),
+                        ),
+                        Text(
+                          'Bank Transfer',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 10.h,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
+                          'Service',
+                          style: TextStyle(color: Colors.white54),
+                        ),
+                        Text(
+                          widget.namaLayanan,
+                          style: const TextStyle(color: Colors.white),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 10.h,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
+                          'Sender Name',
+                          style: TextStyle(color: Colors.white54),
+                        ),
+                        StreamBuilder<DocumentSnapshot<Map<String, dynamic>>>(
+                          stream: FirebaseFirestore.instance
+                              .collection('User')
+                              .doc(FirebaseAuth.instance.currentUser?.uid)
+                              .snapshots(),
+                          builder: (BuildContext context,
+                              AsyncSnapshot<
+                                      DocumentSnapshot<Map<String, dynamic>>>
+                                  snapshot) {
+                            if (snapshot.hasData && snapshot.data!.exists) {
+                              var data = snapshot.data!.data();
+                              String? username = data?['username'];
+                              if (username!.isNotEmpty) {
+                                return Text(
+                                  username.length > 12
+                                      ? '${username.substring(0, 12)},'
+                                      : username,
+                                  style: const TextStyle(color: Colors.white),
+                                );
+                              }
+                            }
+                            return const Text(
+                              "User",
+                              style: TextStyle(color: Colors.white),
+                            );
+                          },
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 20.h,
+                    ),
+                    const DashedDivider(
+                      color: Colors.white38,
+                    ),
+                    SizedBox(
+                      height: 20.h,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
+                          'Amount',
+                          style: TextStyle(color: Colors.white54),
+                        ),
+                        Text(
+                          'Rp ${widget.harga}',
+                          style: const TextStyle(color: Colors.white),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 10.h,
+                    ),
+                    const Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'Admin Fee',
+                          style: TextStyle(color: Colors.white54),
+                        ),
+                        Text(
+                          'Rp 1.000',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 10.h,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        const Text(
+                          'Payment Status',
+                          style: TextStyle(color: Colors.white54),
+                        ),
+                        Container(
+                          width: 70.w,
+                          height: 30.h,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20.0.r),
+                            color: const Color.fromARGB(
+                              111,
+                              255,
+                              241,
+                              118,
+                            ),
+                          ),
+                          child: Center(
+                            child: Text(
+                              'Pending',
+                              style: TextStyle(
+                                fontSize: 12.sp,
+                                color: Colors.yellow,
+                              ),
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
             SizedBox(
-              height: 100,
-              child: ListView.builder(
-                physics: const BouncingScrollPhysics(),
-                itemCount: services.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return ListTile(
-                    leading:
-                        const Icon(Icons.check_outlined, color: Colors.green),
-                    title: Text(
-                      services[index],
-                      style: const TextStyle(color: Colors.white),
-                    ),
-                  );
-                },
-              ),
+              height: 60.h,
             ),
-            const SizedBox(height: 20.0),
-            Text(
-              'Total Payment: Rp $totalPayment',
-              style: const TextStyle(
-                fontSize: 18.0,
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            SizedBox(height: 24.0.h),
-            Center(
-              child: ElevatedButton(
-                onPressed: () {
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => const HomeScreen(),
+            ElevatedButton(
+              onPressed: () {
+                addPaymentToFirestore();
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const SucessfullPayment(
+                      
                     ),
-                  );
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColor.saldoColor,
-                  minimumSize: Size(280.w, 50.h),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10.r),
-                    side: BorderSide.none,
                   ),
+                );
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AppColor.purpleColor,
+                minimumSize: Size(345.w, 50.h),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10.r),
+                  side: BorderSide.none,
                 ),
-                child: const Text('Bayar'),
+              ),
+              child: const Text(
+                'Bayar',
+                style: TextStyle(color: Colors.white),
               ),
             ),
           ],

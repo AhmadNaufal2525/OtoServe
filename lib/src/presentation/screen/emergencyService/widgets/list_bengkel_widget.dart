@@ -1,19 +1,21 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:otoserve/src/presentation/screen/emergencyService/emergency_service_screen.dart';
+import 'package:otoserve/src/presentation/screen/emergencyService/widgets/bengkel_emergency_widget.dart';
 import 'package:otoserve/src/presentation/screen/home/widgets/card_bengkel_widget.dart';
-import 'package:otoserve/src/presentation/screen/homeService/mekanik_screen.dart';
 import 'package:otoserve/src/utils/colors.dart';
-import 'package:otoserve/src/widgets/bottom_navigation_widget.dart';
 
-class HomeServiceScreen extends StatefulWidget {
-  const HomeServiceScreen({super.key});
+class ListBengkelWidget extends StatefulWidget {
+  final String namaLayanan;
+  final String harga;
+  const ListBengkelWidget({super.key, required this.namaLayanan, required this.harga});
 
   @override
-  State<HomeServiceScreen> createState() => _HomeServiceScreenState();
+  State<ListBengkelWidget> createState() => _ListBengkelWidgetState();
 }
 
-class _HomeServiceScreenState extends State<HomeServiceScreen> {
+class _ListBengkelWidgetState extends State<ListBengkelWidget> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,13 +26,12 @@ class _HomeServiceScreenState extends State<HomeServiceScreen> {
             bottomRight: Radius.circular(10),
           ),
         ),
-        automaticallyImplyLeading: true,
          leading: IconButton(
           onPressed: () {
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(
-                builder: (context) => const BottomNavigationWidget(),
+                builder: (context) => const EmergencyServiceScreen(),
               ),
             );
           },
@@ -39,10 +40,11 @@ class _HomeServiceScreenState extends State<HomeServiceScreen> {
             color: Colors.white,
           ),
         ),
+        automaticallyImplyLeading: true,
         centerTitle: false,
         toolbarHeight: 80.h,
         title: Text(
-          'Pilih bengkel terdekat',
+          'Pilih bengkel',
           style: TextStyle(
             color: Colors.white,
             fontWeight: FontWeight.w600,
@@ -131,7 +133,7 @@ class _HomeServiceScreenState extends State<HomeServiceScreen> {
                     return ListView.separated(
                       physics: const BouncingScrollPhysics(),
                       separatorBuilder: (context, index) =>
-                          SizedBox(height: 30.h),
+                        SizedBox(height: 30.h),
                       itemCount: docs.length,
                       itemBuilder: (context, index) {
                         final bengkel = docs[index];
@@ -142,12 +144,11 @@ class _HomeServiceScreenState extends State<HomeServiceScreen> {
                           jarak: bengkel['jarak'],
                           status: bengkel['status'],
                           onTap: () {
-                            Navigator.push(
+                            Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => MekanikScreen(
-                                  name: bengkel['nama'],
-                                ),
+                                builder: (context) =>
+                                    BengkelEmergencyWidget(namaLayanan: widget.namaLayanan, harga: widget.harga,),
                               ),
                             );
                           },

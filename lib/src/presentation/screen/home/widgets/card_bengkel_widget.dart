@@ -27,17 +27,26 @@ class CardBengkelWidget extends StatelessWidget {
         children: [
           Row(
             children: [
-              Image.network(
-                image,
+              Container(
                 width: 128.w,
-                height: 102.h,
-                errorBuilder: (context, error, stackTrace) {
-                  return Image.asset(
-                    'assets/images/bengkel.png',
-                    width: 128.w,
-                    height: 102.h,
-                  );
-                },
+                height: 80.h,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(30.0).r,
+                ),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(10.0).r,
+                  child: Image.network(
+                    image,
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) {
+                      return Image.asset(
+                        'assets/images/bengkel.png',
+                        width: 128.w,
+                        height: 102.h,
+                      );
+                    },
+                  ),
+                ),
               ),
               SizedBox(
                 width: 28.w,
@@ -50,7 +59,7 @@ class CardBengkelWidget extends StatelessWidget {
                     style: TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.w600,
-                      fontSize: 16.sp,
+                      fontSize: 14.sp,
                     ),
                   ),
                   SizedBox(
@@ -60,7 +69,7 @@ class CardBengkelWidget extends StatelessWidget {
                     children: [
                       Icon(
                         Icons.star,
-                        size: 20,
+                        size: 16,
                         color: Colors.yellow[600],
                       ),
                       SizedBox(
@@ -71,7 +80,7 @@ class CardBengkelWidget extends StatelessWidget {
                         style: TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.w500,
-                          fontSize: 16.sp,
+                          fontSize: 14.sp,
                         ),
                       ),
                       SizedBox(
@@ -80,7 +89,7 @@ class CardBengkelWidget extends StatelessWidget {
                       const Icon(
                         Icons.location_on,
                         color: Colors.white,
-                        size: 20,
+                        size: 16,
                       ),
                       SizedBox(
                         width: 6.w,
@@ -90,13 +99,13 @@ class CardBengkelWidget extends StatelessWidget {
                         style: TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.w500,
-                          fontSize: 16.sp,
+                          fontSize: 14.sp,
                         ),
                       ),
                     ],
                   ),
                   SizedBox(
-                    height: 4.h,
+                    height: 6.h,
                   ),
                   Text(
                     status,
@@ -105,7 +114,7 @@ class CardBengkelWidget extends StatelessWidget {
                           ? Colors.green
                           : Colors.red,
                       fontWeight: FontWeight.w500,
-                      fontSize: 16.sp,
+                      fontSize: 14.sp,
                     ),
                   ),
                 ],

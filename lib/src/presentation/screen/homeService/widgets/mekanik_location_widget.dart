@@ -1,64 +1,41 @@
-import 'dart:math';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:otoserve/src/presentation/screen/emergencyService/widgets/chat_widget.dart';
-
-import 'package:otoserve/src/presentation/screen/pembayaran/pembayaran_screen.dart';
+import 'package:otoserve/src/presentation/screen/homeService/widgets/konsultasi_chat_widget.dart';
+import 'package:otoserve/src/presentation/screen/pembayaran/pembayaran_home_service.dart';
 import 'package:otoserve/src/utils/colors.dart';
 
-class BengkelEmergencyWidget extends StatefulWidget {
-  final String namaLayanan;
-  final String harga;
-  const BengkelEmergencyWidget(
-      {Key? key, required this.namaLayanan, required this.harga})
+class MekanikLocationWidget extends StatefulWidget {
+  final String nama;
+  final String imageUrl;
+  final String rate;
+  final List<String> selectedServices;
+  final List<String> selectedPrice;
+
+  const MekanikLocationWidget(
+      {Key? key, required this.nama, required this.imageUrl, required this.selectedServices, required this.selectedPrice, required this.rate, })
       : super(key: key);
 
   @override
-  State<BengkelEmergencyWidget> createState() => _BengkelEmergencyWidgetState();
+  State<MekanikLocationWidget> createState() => _MekanikLocationWidgetState();
 }
 
-class _BengkelEmergencyWidgetState extends State<BengkelEmergencyWidget> {
-  late String mechanicImage = '';
-  late String mechanicName = '';
-  late String mechanicRate = '';
-  bool isLoading = true;
+class _MekanikLocationWidgetState extends State<MekanikLocationWidget> {
   late String currentImageMaps = 'assets/images/maps_1.png';
+  late String currentProgress = 'assets/images/progress_2.png';
   late String currentText = 'Tiba dalam 10 menit';
 
   @override
   void initState() {
     super.initState();
-    fetchRandomMechanic();
-    startTimer();
-  }
-
-  void fetchRandomMechanic() async {
-  QuerySnapshot snapshot = await FirebaseFirestore.instance.collection('mekanik').get();
-
-  if (snapshot.docs.isNotEmpty) {
-    var randomIndex = Random().nextInt(snapshot.docs.length);
-    var randomMechanic = snapshot.docs[randomIndex];
-
-    setState(() {
-      mechanicName = randomMechanic['nama'];
-      mechanicImage = randomMechanic['image_url'];
-      mechanicRate = randomMechanic['rate'];
-      isLoading = false;
-    });
-  }
-}
-
-  void startTimer() {
     Future.delayed(const Duration(seconds: 10), () {
       setState(() {
         currentImageMaps = 'assets/images/maps_2.png';
+        currentProgress = 'assets/images/progress_3.png';
         currentText = 'Mekanik sudah sampai tujuan';
       });
     });
   }
-
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -110,14 +87,12 @@ class _BengkelEmergencyWidgetState extends State<BengkelEmergencyWidget> {
                             children: [
                               ClipRRect(
                                 borderRadius: BorderRadius.circular(10.0).r,
-                                child: mechanicImage.isNotEmpty
-                                    ? Image.network(
-                                        mechanicImage,
-                                        width: 80.w,
-                                        height: 100.h,
-                                        fit: BoxFit.cover,
-                                      )
-                                    : const CircularProgressIndicator(),
+                                child: Image.network(
+                                  widget.imageUrl,
+                                  width: 80.w,
+                                  height: 100.h,
+                                  fit: BoxFit.cover,
+                                ),
                               ),
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -126,9 +101,7 @@ class _BengkelEmergencyWidgetState extends State<BengkelEmergencyWidget> {
                                     children: [
                                       SizedBox(width: 12.w),
                                       Text(
-                                        mechanicName.isNotEmpty
-                                            ? mechanicName
-                                            : 'Loading...',
+                                        widget.nama,
                                         style: TextStyle(
                                           color: Colors.white,
                                           fontWeight: FontWeight.bold,
@@ -183,7 +156,7 @@ class _BengkelEmergencyWidgetState extends State<BengkelEmergencyWidget> {
                                             ),
                                             const SizedBox(width: 4),
                                             Text(
-                                              mechanicRate,
+                                              widget.rate,
                                               style: const TextStyle(
                                                 color: Colors.white,
                                               ),
@@ -201,9 +174,10 @@ class _BengkelEmergencyWidgetState extends State<BengkelEmergencyWidget> {
                                                 context,
                                                 MaterialPageRoute(
                                                   builder: (context) =>
-                                                      ChatWidget(
-                                                    imageUrl: mechanicImage,
-                                                    name: mechanicName,
+                                                      KonsultasiChatWidget(
+                                                    name: widget.nama,
+                                                    imageUrl: widget.imageUrl,
+                                                    konfirm: true, rate: widget.rate,
                                                   ),
                                                 ),
                                               );
@@ -230,25 +204,30 @@ class _BengkelEmergencyWidgetState extends State<BengkelEmergencyWidget> {
                               ),
                             ],
                           ),
-                          SizedBox(height: 40.h),
+                          SizedBox(height: 30.h),
                           Column(
                             children: [
+                              Image.asset(
+                                currentProgress,
+                                width: double.infinity,
+                              ),
+                              SizedBox(height: 30.h),
                               Container(
                                 width: 373.w,
                                 height: 3.h,
                                 color: const Color(0xff777777),
                               ),
-                              SizedBox(height: 30.h),
+                              SizedBox(height: 10.h),
                               Row(
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
-                                    'Biaya ${widget.namaLayanan} ',
+                                    'Biaya ${widget.selectedServices.join(', ')}',
                                     style: const TextStyle(color: Colors.white),
                                   ),
                                   Text(
-                                    'Rp ${widget.harga} ',
+                                     'Rp ${widget.selectedPrice.join(', ')}',
                                     style: const TextStyle(color: Colors.white),
                                   )
                                 ],
@@ -263,12 +242,12 @@ class _BengkelEmergencyWidgetState extends State<BengkelEmergencyWidget> {
                                     style: TextStyle(color: Colors.white),
                                   ),
                                   Text(
-                                    'Rp 1.000.000',
+                                    'Rp 250.000',
                                     style: TextStyle(color: Colors.white),
                                   )
                                 ],
                               ),
-                              SizedBox(height: 40.h),
+                              SizedBox(height: 30.h),
                               Align(
                                 alignment: Alignment.center,
                                 child: ElevatedButton(
@@ -276,9 +255,10 @@ class _BengkelEmergencyWidgetState extends State<BengkelEmergencyWidget> {
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(
-                                        builder: (context) => PembayaranScreen(
-                                          namaLayanan: widget.namaLayanan,
-                                          harga: widget.harga,
+                                        builder: (context) =>
+                                            PembayaranHomeServiceScreen(
+                                          name: widget.nama,
+                                          imageUrl: widget.imageUrl, selectedServices: widget.selectedServices, selectedPrice: widget.selectedPrice, rate: widget.rate,
                                         ),
                                       ),
                                     );

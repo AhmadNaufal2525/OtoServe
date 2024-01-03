@@ -1,8 +1,10 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:otoserve/src/presentation/screen/auth/login_screen.dart';
 import 'package:otoserve/src/utils/colors.dart';
 import 'package:otoserve/src/widgets/bottom_navigation_widget.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -18,22 +20,32 @@ class _SplashScreenState extends State<SplashScreen> {
     openSplashScreen();
   }
 
-  openSplashScreen() async {
-
-      var duration = const Duration(seconds: 2);
-
-      return Timer(
-        duration,
-        () {
-           Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                const BottomNavigationWidget(),
-                          ),
-                        );
-        },
-      );
+   openSplashScreen() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
+    var durasiSplash = const Duration(seconds: 2);
+    return Timer(
+      durasiSplash,
+      () async {
+        if (isLoggedIn) {
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(
+              builder: (_) {
+                return const BottomNavigationWidget();
+              },
+            ),
+          );
+        } else {
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(
+              builder: (_) {
+                return const LoginScreen();
+              },
+            ),
+          );
+        }
+      },
+    );
   }
 
   @override
